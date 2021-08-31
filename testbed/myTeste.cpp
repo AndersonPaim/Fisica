@@ -2,6 +2,7 @@
 #include "test.h"
 #include <iostream>
 
+
 class MyTest : public Test //voc� cria a sua classe derivada da classe base Test
 {
 public:
@@ -11,49 +12,34 @@ public:
 		b2Vec2 gravity(0.0f, -9.8f);
 		world = new b2World(gravity);
 
-		b2Body* ground = NULL;
+
+		CreateWall(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+		CreateWall(b2Vec2(-40.0f, 40.0f), b2Vec2(40.0f, 40.0f));
+		CreateWall(b2Vec2(40.0f, 00.0f), b2Vec2(40.0f, 40.0f));
+		CreateWall(b2Vec2(-40.0f, 00.0f), b2Vec2(-40.0f, 40.0f));
+	}
+
+	void CreateWall(b2Vec2 pos1, b2Vec2 pos2)
+	{
+		b2Body* wall = NULL;
 		{
 			b2BodyDef bd;
-			ground = m_world->CreateBody(&bd);
+			wall = m_world->CreateBody(&bd);
 
 			b2EdgeShape shape;
-			shape.SetTwoSided(b2Vec2(-20.0f, 0.0f), b2Vec2(20.0f, 0.0f));
+			shape.SetTwoSided(pos1, pos2);
 
 			b2FixtureDef fd;
 			fd.shape = &shape;
 
-			ground->CreateFixture(&fd);
+			wall->CreateFixture(&fd);
 		}
-
-		for (int i = 0; i < 3; i++)
-		{
-			b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
-			float density(RandomFloat(0.1f, 1.0f));
-			float radius(RandomFloat(0.1f, 5.0f));
-			float restitution(RandomFloat(0.0f, 1.0f));
-			float friction(RandomFloat(0.0f, 1.0f)); 
-
-			CreateCircle(density, radius, friction, restitution, pos);
-		}
-
-		for (int i = 0; i < 3; i++)
-		{
-			b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
-			float density(RandomFloat(0.1f, 35.0f));
-			float height(RandomFloat(0.1f, 1.0f));
-			float width(RandomFloat(1.0f, 5.0f));
-			float restitution(RandomFloat(0.0f, 1.0f));
-			float friction(RandomFloat(0.0f, 1.0f));
-
-			CreateBox(density, height, width, friction, restitution, pos);
-		}
-
 	}
 
 	void CreateCircle(float density, int radius, float friction, float restitution, b2Vec2 position)
 	{
 		b2Body* circleObj;
-		
+
 		b2BodyDef bd;
 		bd.type = b2_dynamicBody;
 		bd.position = position;
@@ -90,6 +76,24 @@ public:
 		body->CreateFixture(&fd);
 	}
 
+	void CreateEdge(int density, float height, float width, float friction, float restitution, b2Vec2 position, b2Vec2 pos1, b2Vec2 pos2)
+	{
+		b2Body* edge;
+
+		b2BodyDef bt;
+		bt.type = b2_dynamicBody;
+		bt.position = position;
+		edge = m_world->CreateBody(&bt);
+		b2EdgeShape shape;
+		shape.SetTwoSided(b2Vec2(-pos1), b2Vec2(pos2));
+		b2FixtureDef fd;
+		fd.shape = &shape;
+		fd.density = density;
+		fd.restitution = restitution;
+
+		edge->CreateFixture(&fd);
+	}
+
 
 	void Step(Settings& settings) override
 	{
@@ -109,7 +113,52 @@ public:
 
 		return new MyTest;
 	}
-};
 
-//Aqui fazemos o registro do novo teste 
-static int testIndex = RegisterTest("Examples", "MyTest", MyTest::Create);
+	void Keyboard(int key) override
+	{
+		switch (key)
+		{
+			case GLFW_KEY_C:
+			{
+				b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
+				float density(RandomFloat(0.1f, 1.0f));
+				float radius(RandomFloat(0.1f, 5.0f));
+				float restitution(RandomFloat(0.0f, 1.0f));
+				float friction(RandomFloat(0.0f, 1.0f));
+				CreateCircle(density, radius, friction, restitution, pos);
+
+				break;
+			}
+			case GLFW_KEY_B:
+			{
+				b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
+				float density(RandomFloat(0.1f, 35.0f));
+				float height(RandomFloat(0.1f, 1.0f));
+				float width(RandomFloat(1.0f, 5.0f));
+				float restitution(RandomFloat(0.0f, 1.0f));
+				float friction(RandomFloat(0.0f, 1.0f));
+				CreateBox(density, height, width, friction, restitution, pos);
+
+				break;
+			}
+			case GLFW_KEY_L:
+			{
+				b2Vec2 position(RandomFloat(-15.0f, 15.0f), RandomFloat(-15.0f, 15.0f));
+				b2Vec2 pos1(RandomFloat(-15.0f, 15.0f), RandomFloat(-15.0f, 15.0f));
+				b2Vec2 pos2(RandomFloat(-15.0f, 15.0f), RandomFloat(-15.0f, 15.0f));
+
+				float density(RandomFloat(0.1f, 35.0f));
+				float height(RandomFloat(0.1f, 1.0f));
+				float width(RandomFloat(1.0f, 5.0f));
+				float restitution(RandomFloat(0.0f, 1.0f));
+				float friction(RandomFloat(0.0f, 1.0f));
+
+				CreateEdge(density, height, width, friction, restitution, position, pos1, pos2);
+				break;
+			}
+		}
+
+	}
+};
+	//Aqui fazemos o registro do novo teste 
+	static int testIndex = RegisterTest("Examples", "MyTeste", MyTest::Create);
