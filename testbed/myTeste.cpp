@@ -5,6 +5,7 @@
 
 class MyTest : public Test //voc� cria a sua classe derivada da classe base Test
 {
+	int boxRestituion = 0;
 public:
 	MyTest() {
 		// Aqui no construtor voc� inicializa a cena
@@ -17,6 +18,8 @@ public:
 		CreateWall(b2Vec2(-40.0f, 40.0f), b2Vec2(40.0f, 40.0f));
 		CreateWall(b2Vec2(40.0f, 00.0f), b2Vec2(40.0f, 40.0f));
 		CreateWall(b2Vec2(-40.0f, 00.0f), b2Vec2(-40.0f, 40.0f));
+
+		b2Vec2 pos((0, 0), 30);
 	}
 
 	void CreateWall(b2Vec2 pos1, b2Vec2 pos2)
@@ -132,12 +135,17 @@ public:
 			case GLFW_KEY_B:
 			{
 				b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
+
 				float density(RandomFloat(0.1f, 35.0f));
 				float height(RandomFloat(0.1f, 1.0f));
 				float width(RandomFloat(1.0f, 5.0f));
-				float restitution(RandomFloat(0.0f, 1.0f));
 				float friction(RandomFloat(0.0f, 1.0f));
-				CreateBox(density, height, width, friction, restitution, pos);
+				CreateBox(density, height, width, friction, boxRestituion, pos);
+
+				if (boxRestituion < 1)
+				{
+					boxRestituion++;
+				}
 
 				break;
 			}
