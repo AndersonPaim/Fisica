@@ -104,7 +104,7 @@ public:
 		Test::Step(settings);
 
 		//show some text in the main screen
-		g_debugDraw.DrawString(5, m_textLine, "Este e' um template para os exercicios!! :)");
+		g_debugDraw.DrawString(5, m_textLine, "Exercicios 6, 7, 8");
 		m_textLine += 15;
 	}
 
