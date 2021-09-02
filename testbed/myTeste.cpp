@@ -121,52 +121,52 @@ public:
 	{
 		switch (key)
 		{
-			case GLFW_KEY_C:
+		case GLFW_KEY_C:
+		{
+			b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
+			float density(RandomFloat(0.1f, 1.0f));
+			float radius(RandomFloat(0.1f, 5.0f));
+			float restitution(RandomFloat(0.0f, 1.0f));
+			float friction(RandomFloat(0.0f, 1.0f));
+			CreateCircle(density, radius, friction, restitution, pos);
+
+			break;
+		}
+		case GLFW_KEY_B:
+		{
+			b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
+
+			float density(RandomFloat(0.1f, 35.0f));
+			float height(RandomFloat(0.1f, 1.0f));
+			float width(RandomFloat(1.0f, 5.0f));
+			float friction(RandomFloat(0.0f, 1.0f));
+			CreateBox(density, height, width, friction, boxRestituion, pos);
+
+			if (boxRestituion < 1)
 			{
-				b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
-				float density(RandomFloat(0.1f, 1.0f));
-				float radius(RandomFloat(0.1f, 5.0f));
-				float restitution(RandomFloat(0.0f, 1.0f));
-				float friction(RandomFloat(0.0f, 1.0f));
-				CreateCircle(density, radius, friction, restitution, pos);
-
-				break;
+				boxRestituion++;
 			}
-			case GLFW_KEY_B:
-			{
-				b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
 
-				float density(RandomFloat(0.1f, 35.0f));
-				float height(RandomFloat(0.1f, 1.0f));
-				float width(RandomFloat(1.0f, 5.0f));
-				float friction(RandomFloat(0.0f, 1.0f));
-				CreateBox(density, height, width, friction, boxRestituion, pos);
+			break;
+		}
+		case GLFW_KEY_L:
+		{
+			b2Vec2 position(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
+			b2Vec2 pos1(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
+			b2Vec2 pos2(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
 
-				if (boxRestituion < 1)
-				{
-					boxRestituion++;
-				}
+			float density(RandomFloat(0.1f, 35.0f));
+			float height(RandomFloat(0.1f, 1.0f));
+			float width(RandomFloat(1.0f, 5.0f));
+			float restitution(RandomFloat(0.0f, 1.0f));
+			float friction(RandomFloat(0.0f, 1.0f));
 
-				break;
-			}
-			case GLFW_KEY_L:
-			{
-				b2Vec2 position(RandomFloat(-15.0f, 15.0f), RandomFloat(-15.0f, 15.0f));
-				b2Vec2 pos1(RandomFloat(-15.0f, 15.0f), RandomFloat(-15.0f, 15.0f));
-				b2Vec2 pos2(RandomFloat(-15.0f, 15.0f), RandomFloat(-15.0f, 15.0f));
-
-				float density(RandomFloat(0.1f, 35.0f));
-				float height(RandomFloat(0.1f, 1.0f));
-				float width(RandomFloat(1.0f, 5.0f));
-				float restitution(RandomFloat(0.0f, 1.0f));
-				float friction(RandomFloat(0.0f, 1.0f));
-
-				CreateEdge(density, height, width, friction, restitution, position, pos1, pos2);
-				break;
-			}
+			CreateEdge(density, height, width, friction, restitution, position, pos1, pos2);
+			break;
+		}
 		}
 
 	}
 };
-	//Aqui fazemos o registro do novo teste 
-	static int testIndex = RegisterTest("Examples", "MyTeste", MyTest::Create);
+//Aqui fazemos o registro do novo teste 
+static int testIndex = RegisterTest("Examples", "MyTeste", MyTest::Create);
