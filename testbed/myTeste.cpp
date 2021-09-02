@@ -104,7 +104,7 @@ public:
 		Test::Step(settings);
 
 		//show some text in the main screen
-		g_debugDraw.DrawString(5, m_textLine, "Exercicios 6, 7, 8");
+		g_debugDraw.DrawString(5, m_textLine, "Exercicios 6, 7, 8, 9");
 		m_textLine += 15;
 	}
 

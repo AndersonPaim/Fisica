@@ -3,23 +3,18 @@
 #include <iostream>
 
 
-class MyTest : public Test //voc� cria a sua classe derivada da classe base Test
+class MyTest2 : public Test //voc� cria a sua classe derivada da classe base Test
 {
-	int boxRestituion = 0;
+	int boxFriction = 0;
 public:
-	MyTest() {
+	MyTest2() {
 		// Aqui no construtor voc� inicializa a cena
 		b2World* world;
 		b2Vec2 gravity(0.0f, -9.8f);
 		world = new b2World(gravity);
 
-
-		CreateWall(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
-		CreateWall(b2Vec2(-40.0f, 40.0f), b2Vec2(40.0f, 40.0f));
-		CreateWall(b2Vec2(40.0f, 00.0f), b2Vec2(40.0f, 40.0f));
-		CreateWall(b2Vec2(-40.0f, 00.0f), b2Vec2(-40.0f, 40.0f));
-
-		b2Vec2 pos((0, 0), 30);
+		CreateEdge(1, 1, 1, 1, 1, b2Vec2(30, 30), b2Vec2(50, 30), b2Vec2(10, 10));
+		CreateEdge(1, 1, 1, 1, 1, b2Vec2(0, 0), b2Vec2(-70, 0), b2Vec2(-70, 0));
 	}
 
 	void CreateWall(b2Vec2 pos1, b2Vec2 pos2)
@@ -104,7 +99,7 @@ public:
 		Test::Step(settings);
 
 		//show some text in the main screen
-		g_debugDraw.DrawString(5, m_textLine, "Este e' um template para os exercicios!! :)");
+		g_debugDraw.DrawString(5, m_textLine, "Exercicios 9");
 		m_textLine += 15;
 	}
 
@@ -114,7 +109,7 @@ public:
 	{
 
 
-		return new MyTest;
+		return new MyTest2;
 	}
 
 	void Keyboard(int key) override
@@ -134,17 +129,15 @@ public:
 		}
 		case GLFW_KEY_B:
 		{
-			b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
+			b2Vec2 pos(20, 40.0f);
 
-			float density(RandomFloat(0.1f, 35.0f));
-			float height(RandomFloat(0.1f, 1.0f));
-			float width(RandomFloat(1.0f, 5.0f));
-			float friction(RandomFloat(0.0f, 1.0f));
-			CreateBox(density, height, width, friction, boxRestituion, pos);
+			float density(RandomFloat(1.0f, 35.0f));
+			float restituion(RandomFloat(0.0f, 1.0f));
+			CreateBox(density, 1, 1, boxFriction, restituion, pos);
 
-			if (boxRestituion < 1)
+			if (boxFriction < 10)
 			{
-				boxRestituion++;
+				boxFriction++;
 			}
 
 			break;
@@ -169,4 +162,4 @@ public:
 	}
 };
 //Aqui fazemos o registro do novo teste 
-static int testIndex = RegisterTest("Examples", "MyTeste", MyTest::Create);
+static int testIndex = RegisterTest("Examples", "MyTeste2", MyTest2::Create);
