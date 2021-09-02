@@ -16,19 +16,35 @@ public:
 
 		CreateGround(30, 1, b2Vec2(0, 0));
 
-		CreateBox(10, 1, 1, 1, 1, b2Vec2(0, 1));
-		CreateBox(10, 1, 1, 1, 1, b2Vec2(0, 3));
-		CreateBox(10, 1, 1, 1, 1, b2Vec2(0, 5));
-		CreateBox(10, 1, 1, 1, 1, b2Vec2(0, 7));
-		CreateBox(10, 1, 1, 1, 1, b2Vec2(0, 9));
-		CreateBox(10, 1, 1, 1, 1, b2Vec2(0, 11));
+		//box stack
+		CreateBox(10, 1, 1, 1, 0, b2Vec2(-20, 1));
+		CreateBox(10, 1, 1, 1, 0, b2Vec2(-20, 3));
+		CreateBox(10, 1, 1, 1, 0, b2Vec2(-20, 5));
+		CreateBox(10, 1, 1, 1, 0, b2Vec2(-20, 7));
+		CreateBox(10, 1, 1, 1, 0, b2Vec2(-20, 9));
+		CreateBox(10, 1, 1, 1, 0, b2Vec2(-20, 11));
+		//circle stack
+		CreateCircle(10, 1, 1, 0, b2Vec2(-10, 1));
+		CreateCircle(10, 1, 1, 0, b2Vec2(-10, 3));
+		CreateCircle(10, 1, 1, 0, b2Vec2(-10, 5));
+		CreateCircle(10, 1, 1, 0, b2Vec2(-10, 7));
+		CreateCircle(10, 1, 1, 0, b2Vec2(-10, 9));
+		CreateCircle(10, 1, 1, 0, b2Vec2(-10, 11));
+		//box wall
+		float x = -5;
+		float y = 0;
+		for (int i = 0; i < 10; i++)
+		{
+			y = 1;
+			x += 2.1f;
+			for (int j = 0; j < 10; j++)
+			{
+				CreateBox(10, 1, 1, 1, 0, b2Vec2(x, y));
+				y += 3;
+			}
 
-		CreateCircle(10, 1, 1, 1, b2Vec2(15, 1));
-		CreateCircle(10, 1, 1, 1, b2Vec2(15, 3));
-		CreateCircle(10, 1, 1, 1, b2Vec2(15, 5));
-		CreateCircle(10, 1, 1, 1, b2Vec2(15, 7));
-		CreateCircle(10, 1, 1, 1, b2Vec2(15, 9));
-		CreateCircle(10, 1, 1, 1, b2Vec2(15, 11));
+		}
+
 	}
 
 	void CreateWall(b2Vec2 pos1, b2Vec2 pos2)
@@ -129,7 +145,7 @@ public:
 		Test::Step(settings);
 
 		//show some text in the main screen
-		g_debugDraw.DrawString(5, m_textLine, "Exercicios 6, 7, 8, 9");
+		g_debugDraw.DrawString(5, m_textLine, "Exercicios 11, 12");
 		m_textLine += 15;
 	}
 
