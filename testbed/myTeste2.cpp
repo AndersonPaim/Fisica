@@ -1,20 +1,27 @@
-#include "MyTeste.h"
 #include "test.h"
 #include <iostream>
-
+#include <string>
+#include <math.h>
 
 class MyTest2 : public Test //voc� cria a sua classe derivada da classe base Test
 {
 	int boxFriction = 0;
+	int force;
+	int angle;
+	b2Body* lastBody;
 public:
 	MyTest2() {
 		// Aqui no construtor voc� inicializa a cena
+		force = 3000;
+		angle = 0;
 		b2World* world;
 		b2Vec2 gravity(0.0f, -9.8f);
 		world = new b2World(gravity);
 
-		CreateEdge(1, 1, 1, 1, 1, b2Vec2(30, 30), b2Vec2(50, 30), b2Vec2(10, 10));
-		CreateEdge(1, 1, 1, 1, 1, b2Vec2(0, 0), b2Vec2(-70, 0), b2Vec2(-70, 0));
+		CreateWall(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
+		CreateWall(b2Vec2(-40.0f, 40.0f), b2Vec2(40.0f, 40.0f));
+		CreateWall(b2Vec2(40.0f, 00.0f), b2Vec2(40.0f, 40.0f));
+		CreateWall(b2Vec2(-40.0f, 00.0f), b2Vec2(-40.0f, 40.0f));
 	}
 
 	void CreateWall(b2Vec2 pos1, b2Vec2 pos2)
@@ -41,6 +48,11 @@ public:
 		b2BodyDef bd;
 		bd.type = b2_dynamicBody;
 		bd.position = position;
+
+		double pi = 3.14159265359;
+		int newAngle = (angle * (pi / 180));
+
+		bd.angle = newAngle;
 		circleObj = m_world->CreateBody(&bd);
 
 		b2CircleShape circle;
@@ -52,44 +64,13 @@ public:
 		fd.friction = friction;
 		fd.restitution = restitution;
 
+
+		b2Vec2 f = circleObj->GetWorldVector(b2Vec2(force, 0));
+		b2Vec2 p = circleObj->GetWorldPoint(b2Vec2(0.0f, 3.0f));
+		circleObj->ApplyForce(f, p, true);
+		lastBody = circleObj;
+
 		circleObj->CreateFixture(&fd);
-	}
-
-	void CreateBox(int density, float height, float width, float friction, float restitution, b2Vec2 position)
-	{
-		b2BodyDef boxObj;
-		boxObj.type = b2_dynamicBody;
-		boxObj.position = position;
-		b2Body* body = m_world->CreateBody(&boxObj);
-
-		b2PolygonShape box;
-
-		box.SetAsBox(height, width);
-		b2FixtureDef fd;
-		fd.shape = &box;
-		fd.density = density;
-		fd.friction = friction;
-		fd.restitution = restitution;
-
-		body->CreateFixture(&fd);
-	}
-
-	void CreateEdge(int density, float height, float width, float friction, float restitution, b2Vec2 position, b2Vec2 pos1, b2Vec2 pos2)
-	{
-		b2Body* edge;
-
-		b2BodyDef bt;
-		bt.type = b2_dynamicBody;
-		bt.position = position;
-		edge = m_world->CreateBody(&bt);
-		b2EdgeShape shape;
-		shape.SetTwoSided(b2Vec2(-pos1), b2Vec2(pos2));
-		b2FixtureDef fd;
-		fd.shape = &shape;
-		fd.density = density;
-		fd.restitution = restitution;
-
-		edge->CreateFixture(&fd);
 	}
 
 
@@ -98,8 +79,25 @@ public:
 		//Chama o passo da simula��o e o algoritmo de rendering
 		Test::Step(settings);
 
+		if (glfwGetKey(g_mainWindow, GLFW_KEY_UP) == GLFW_PRESS)
+		{
+			force += 100;
+			std::cout << "FORCE: " << force << std::endl;
+		}
+		if (glfwGetKey(g_mainWindow, GLFW_KEY_DOWN) == GLFW_PRESS)
+		{
+			if (force > 100)
+			{
+				force -= 100;
+				std::cout << "FORCE: " << force << std::endl;
+			}
+		}
+	
 		//show some text in the main screen
-		g_debugDraw.DrawString(5, m_textLine, "Exercicios 9");
+		g_debugDraw.DrawString(5, m_textLine, "Exercicios 2 - CRIAR OBJETO COM ESPAÇO");
+		g_debugDraw.DrawString(5, m_textLine + 10, "MUDAR FORÇA COM UP, DOWN");
+		g_debugDraw.DrawString(5, m_textLine + 20, "MUDAR ANGULO COM W, S");
+
 		m_textLine += 15;
 	}
 
@@ -116,47 +114,30 @@ public:
 	{
 		switch (key)
 		{
-		case GLFW_KEY_C:
-		{
-			b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
-			float density(RandomFloat(0.1f, 1.0f));
-			float radius(RandomFloat(0.1f, 5.0f));
-			float restitution(RandomFloat(0.0f, 1.0f));
-			float friction(RandomFloat(0.0f, 1.0f));
-			CreateCircle(density, radius, friction, restitution, pos);
-
-			break;
-		}
-		case GLFW_KEY_B:
-		{
-			b2Vec2 pos(20, 40.0f);
-
-			float density(RandomFloat(1.0f, 35.0f));
-			float restituion(RandomFloat(0.0f, 1.0f));
-			CreateBox(density, 1, 1, boxFriction, restituion, pos);
-
-			if (boxFriction < 10)
+			case GLFW_KEY_SPACE:
 			{
-				boxFriction++;
+				b2Vec2 pos(-35, 1);
+				CreateCircle(1, 1, 1, 0, pos);
+				break;
 			}
-
-			break;
-		}
-		case GLFW_KEY_L:
-		{
-			b2Vec2 position(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
-			b2Vec2 pos1(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
-			b2Vec2 pos2(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
-
-			float density(RandomFloat(0.1f, 35.0f));
-			float height(RandomFloat(0.1f, 1.0f));
-			float width(RandomFloat(1.0f, 5.0f));
-			float restitution(RandomFloat(0.0f, 1.0f));
-			float friction(RandomFloat(0.0f, 1.0f));
-
-			CreateEdge(density, height, width, friction, restitution, position, pos1, pos2);
-			break;
-		}
+			case GLFW_KEY_W:
+			{
+				if (angle < 360)
+				{
+					angle += 15;
+					std::cout << "ANGLE: " << angle << std::endl;
+				}
+				break;
+			}
+			case GLFW_KEY_S:
+			{
+				if (angle > 0)
+				{
+					angle -= 15;
+					std::cout << "ANGLE: " << angle << std::endl;
+				}
+				break;
+			}
 		}
 
 	}

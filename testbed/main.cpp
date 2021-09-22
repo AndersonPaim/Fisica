@@ -161,33 +161,6 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
 				g_camera.m_center.x += 0.5f;
 			}
 			break;
-
-		case GLFW_KEY_DOWN:
-			// Pan down
-			if (mods == GLFW_MOD_CONTROL)
-			{
-				b2Vec2 newOrigin(0.0f, 2.0f);
-				s_test->ShiftOrigin(newOrigin);
-			}
-			else
-			{
-				g_camera.m_center.y -= 0.5f;
-			}
-			break;
-
-		case GLFW_KEY_UP:
-			// Pan up
-			if (mods == GLFW_MOD_CONTROL)
-			{
-				b2Vec2 newOrigin(0.0f, -2.0f);
-				s_test->ShiftOrigin(newOrigin);
-			}
-			else
-			{
-				g_camera.m_center.y += 0.5f;
-			}
-			break;
-
 		case GLFW_KEY_HOME:
 			// Reset view
 			g_camera.m_zoom = 1.0f;
@@ -209,15 +182,6 @@ static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, i
 			delete s_test;
 			s_test = g_testEntries[s_settings.m_testIndex].createFcn();
 			break;
-
-		case GLFW_KEY_SPACE:
-			// Launch a bomb.
-			if (s_test)
-			{
-				s_test->LaunchBomb();
-			}
-			break;
-
 		case GLFW_KEY_O:
 			s_settings.m_singleStep = true;
 			break;
