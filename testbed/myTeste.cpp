@@ -1,4 +1,3 @@
-#include "MyTeste.h"
 #include "test.h"
 #include <iostream>
 
@@ -6,6 +5,8 @@
 class MyTest : public Test //voc� cria a sua classe derivada da classe base Test
 {
 	int boxRestituion = 0;
+	bool isfirstBox = true;
+	b2Body* firstBox;
 public:
 	MyTest() {
 		// Aqui no construtor voc� inicializa a cena
@@ -18,6 +19,15 @@ public:
 		CreateWall(b2Vec2(-40.0f, 40.0f), b2Vec2(40.0f, 40.0f));
 		CreateWall(b2Vec2(40.0f, 00.0f), b2Vec2(40.0f, 40.0f));
 		CreateWall(b2Vec2(-40.0f, 00.0f), b2Vec2(-40.0f, 40.0f));
+
+
+		int posX = -30;
+
+		for (int i = 0; i < 10; i++)
+		{
+			posX += 5;
+			CreateBox(1, 1, 6, 1, 0, b2Vec2(posX, 1));
+		}
 
 		b2Vec2 pos((0, 0), 30);
 	}
@@ -39,33 +49,18 @@ public:
 		}
 	}
 
-	void CreateCircle(float density, int radius, float friction, float restitution, b2Vec2 position)
-	{
-		b2Body* circleObj;
-
-		b2BodyDef bd;
-		bd.type = b2_dynamicBody;
-		bd.position = position;
-		circleObj = m_world->CreateBody(&bd);
-
-		b2CircleShape circle;
-		circle.m_radius = radius;
-
-		b2FixtureDef fd;
-		fd.shape = &circle;
-		fd.density = density;
-		fd.friction = friction;
-		fd.restitution = restitution;
-
-		circleObj->CreateFixture(&fd);
-	}
-
 	void CreateBox(int density, float height, float width, float friction, float restitution, b2Vec2 position)
 	{
 		b2BodyDef boxObj;
 		boxObj.type = b2_dynamicBody;
 		boxObj.position = position;
 		b2Body* body = m_world->CreateBody(&boxObj);
+
+		if (isfirstBox)
+		{
+			firstBox = body;
+			isfirstBox = false;
+		}
 
 		b2PolygonShape box;
 
@@ -103,8 +98,15 @@ public:
 		//Chama o passo da simula��o e o algoritmo de rendering
 		Test::Step(settings);
 
+		if (glfwGetKey(g_mainWindow, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			b2Vec2 f = firstBox->GetWorldVector(b2Vec2(100.0f, 0));
+			b2Vec2 p = firstBox->GetWorldPoint(b2Vec2(0.0f, 3.0f));
+			firstBox->ApplyForce(f, p, true);
+		}
+
 		//show some text in the main screen
-		g_debugDraw.DrawString(5, m_textLine, "Exercicios 6, 7, 8, 9");
+		g_debugDraw.DrawString(5, m_textLine, "Exercicio 1 - CLIQUE W PARA APLICAR FORÇA");
 		m_textLine += 15;
 	}
 
@@ -115,57 +117,6 @@ public:
 
 
 		return new MyTest;
-	}
-
-	void Keyboard(int key) override
-	{
-		switch (key)
-		{
-		case GLFW_KEY_C:
-		{
-			b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
-			float density(RandomFloat(0.1f, 1.0f));
-			float radius(RandomFloat(0.1f, 5.0f));
-			float restitution(RandomFloat(0.0f, 1.0f));
-			float friction(RandomFloat(0.0f, 1.0f));
-			CreateCircle(density, radius, friction, restitution, pos);
-
-			break;
-		}
-		case GLFW_KEY_B:
-		{
-			b2Vec2 pos(RandomFloat(-15.0f, 15.0f), 30.0f);
-
-			float density(RandomFloat(0.1f, 35.0f));
-			float height(RandomFloat(0.1f, 1.0f));
-			float width(RandomFloat(1.0f, 5.0f));
-			float friction(RandomFloat(0.0f, 1.0f));
-			CreateBox(density, height, width, friction, boxRestituion, pos);
-
-			if (boxRestituion < 1)
-			{
-				boxRestituion++;
-			}
-
-			break;
-		}
-		case GLFW_KEY_L:
-		{
-			b2Vec2 position(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
-			b2Vec2 pos1(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
-			b2Vec2 pos2(RandomFloat(5.0f, 15.0f), RandomFloat(5.0f, 15.0f));
-
-			float density(RandomFloat(0.1f, 35.0f));
-			float height(RandomFloat(0.1f, 1.0f));
-			float width(RandomFloat(1.0f, 5.0f));
-			float restitution(RandomFloat(0.0f, 1.0f));
-			float friction(RandomFloat(0.0f, 1.0f));
-
-			CreateEdge(density, height, width, friction, restitution, position, pos1, pos2);
-			break;
-		}
-		}
-
 	}
 };
 //Aqui fazemos o registro do novo teste 
